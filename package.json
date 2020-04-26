@@ -11,5 +11,15 @@
   "dependencies": {
     "express": "^4.17.1",
     "socket.io": "^2.3.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arvince-dev/chat-app.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/Arvince-dev/chat-app/issues"
+  },
+  "homepage": "https://github.com/Arvince-dev/chat-app#readme"
 }
