@@ -198,12 +198,25 @@ a {
 	text-align: left;
 }
 
+@media (min-width: 993px){
+    #Send {
+		font-size: 17px !important;
+	}
+}
+
+@media (max-width: 992px){
+
+	#Send {
+		font-size: 13px !important;
+	}
+}
+
 /* #chatbox {
     overflow-y: scroll; 
     background-color: white !important;
-}
+} */
 
-@media (min-width: 993px){
+/* @media (min-width: 993px){
     #chatbox {
         height: 420px;
     }
