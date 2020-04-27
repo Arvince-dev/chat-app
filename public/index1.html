@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Chat App</title>
+    <title>Stranger Finder</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/styles/styles.css">
 </head>
 
 <body>
@@ -27,37 +28,44 @@
                     <form @submit.prevent="addUser">
                         <div class="form-group row">
                             <input type="text" class="form-control col-9" v-model="username"
-                                placeholder="Enter username here">
-                            <input type="submit" value="Join" class="btn btn-sm btn-info ml-1">
+                                placeholder="Username">
+                            <input type="text" class="form-control col-9 mt-2 mb-2" v-model="room"
+                                placeholder="Room Name">
+                            <input type="submit" value="Join" class="col-9 btn btn-sm btn-info ml-1">
 
                         </div>
                     </form>
                 </div>
-                <h2 v-else>{{username}}</h2>
+                <!-- <h2 v-else>{{username}}</h2> -->
+                <br>
                 <div class="card bg-info" v-if="ready">
                     <div class="card-header text-white">
-                        <h4>My Chat App <span class="float-right">{{connections}} connections</span></h4>
+                        <h4>Stranger Finder </h4>
                     </div>
-                    <ul class="list-group list-group-flush text-right">
-                        <small v-if="typing" class="text-white">{{typing}} is typing</small>
+                    <ul id="chatbox" class="list-group list-group-flush text-right">
                         <li class="list-group-item" v-for="message in messages">
-                            <span :class="{'float-left':message.type === 1}">
+                            <!-- <span :class="{'float-left':message.type === 1}"> -->
+                            <span class="float-left" style="color: red;" v-if="message.type === 1">
+                                <small>Stranger:</small>
+                                {{message.message}}
+                            </span>
+                            <span class="float-right" style="color: blue;" v-if="message.type === 0">
                                 <small>{{message.user}}:</small>
                                 {{message.message}}
                             </span>
                         </li>
+                        <small v-if="typing" style="background-color: white;">Stranger is typing</small>
+                        <br>
                     </ul>
 
                     <div class="card-body">
-                        <!-- <form > -->
+                        <form @submit.prevent="send" >
                             <div class="form-group row">
-                                <input type="text" class="form-control col-10" v-model="newMessage"
+                                <input type="text" class="form-control col-lg-10 col-md-10 col-9" v-model="newMessage"
                                     placeholder="Enter message here">
-                                <input type="submit" v-on:click="send" value="Send" class="btn btn-sm btn-info ml-1" style="background-color: snow; color: black">
-
-                                    <!-- <button v-on:click="send">Send</button> -->
+                                <input type="submit" value="Send" class="btn btn-sm btn-info ml-1" style="background-color: snow; color: black">
                             </div>
-                        <!-- </form> -->
+                        </form>
                     </div>
                 </div>
             </div>
@@ -71,6 +79,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
 
 <script>
+    // Get username and room from URL
+    const { username, room } = Qs.parse(location.search, {
+        ignoreQueryPrefix: true
+    });
+
     // Client side Socket.IO object
     var socket = io();
     
@@ -86,6 +99,7 @@
             messages: [],
             typing: false,
             username: null,
+            room: null,
             ready: false,
             info: [],
             connections: 0,
@@ -101,12 +115,17 @@
             }
             
             // Listening to chat-message event emitted from the server and pushing to messages array
-            socket.on('chat-message', (data) => {
+            socket.on('chatMessage', (data) => {
                 this.messages.push({
                     message: data.message,
                     type: 1,
                     user: data.user,
                 });
+
+                this.$nextTick(function () {
+                    var messageBox = document.getElementById('chatbox');
+                    messageBox.scrollTop = messageBox.scrollHeight;
+                })
             });
             
             
@@ -121,7 +140,8 @@
             });
 
              // Listening to 'joined' event emitted from the server and pushing the data to info array
-            socket.on('joined', (data) => {
+            socket.on('joinRoom', (data) => {
+
                 this.info.push({
                     username: data,
                     type: 'joined'
@@ -172,7 +192,12 @@
                     user: 'Me',
                 });
 
-                socket.emit('chat-message', {
+                this.$nextTick(function () {
+                    var messageBox = document.getElementById('chatbox');
+                    messageBox.scrollTop = messageBox.scrollHeight;
+                })
+
+                socket.emit('chatMessage', {
                     message: this.newMessage,
                     user: this.username
                 });
@@ -182,7 +207,7 @@
             // The addUser method emit a 'joined' event with the username and set the 'ready' property to true.
             addUser() {
                 this.ready = true;
-                socket.emit('joined', this.username)
+                socket.emit('joinRoom', { username, room });
             }
         },
 
