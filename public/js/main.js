@@ -15,8 +15,8 @@ socket.emit('joinRoom', { username, room });
 
 // Get room and users
 socket.on('roomUsers', ({ room, users }) => {
-    outputRoomName(room);
-    outputUsers(users);
+    // outputRoomName(room);
+    // outputUsers(users);
 });
 
 // Message from server
@@ -45,30 +45,27 @@ chatForm.addEventListener('submit', e => {
 
 // Output message to DOM
 function outputMessage(message) {
-    console.log(message);
-    console.log(username);
-    
     const div = document.createElement('div');
     div.classList.add('message');
     if(username == message.username){
-        div.innerHTML = `<p class="meta text-right">${message.username} <span>${message.time}</span></p>
-        <p class="text text-right">
+        div.innerHTML = `<p class="meta text-right" style="color: white;">${message.username} <span style="color: white;">${message.time}</span></p>
+        <p class="text text-right" style="color: white;">
             ${message.text}
         </p>`;
-        div.setAttribute('style', 'color: red');
+        div.setAttribute('style', 'background-color: var(--dark-color-b)');
     } else {
-        div.innerHTML = `<p class="meta text-left">${message.username} <span>${message.time}</span></p>
-        <p class="text text-left">
+        div.innerHTML = `<p class="meta text-left" style="color: black;">${message.username} <span style="color: black;">${message.time}</span></p>
+        <p class="text text-left" style="color: black;">
             ${message.text}
         </p>`;
-        div.setAttribute('style', 'color: blue');
+        div.setAttribute('style', 'background-color: #e5e5e5');
     }
     document.querySelector('.chat-messages').appendChild(div);
 }
 
 // Add room name to DOM
 function outputRoomName(room) {
-    roomName.innerText = room;
+    roomName.innerText = "Room Name " + " : " + room;
 }
 
 // Add users to DOM

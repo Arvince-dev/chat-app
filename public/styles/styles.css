@@ -3,8 +3,8 @@
 :root {
 	/* --dark-color-a: #667aff; */
 	/* --dark-color-b: #7386ff; */
-	--dark-color-a: #3C5148;
-	--dark-color-b: #6B8E4E;
+	--dark-color-a: #346a82;
+	--dark-color-b: #89D5C9;
 	--light-color: #e6e9ff;
 	--success-color: #5cb85c;
 	--error-color: #d9534f;
@@ -198,7 +198,7 @@ a {
 	text-align: left;
 }
 
-@media (min-width: 993px){
+/* @media (min-width: 993px){
     #Send {
 		font-size: 17px !important;
 	}
@@ -209,6 +209,21 @@ a {
 	#Send {
 		font-size: 13px !important;
 	}
+} */
+
+.chat-messages-bg {
+	background-color: white;
+}
+
+#Send {
+	font-size: 22px !important;
+	border-radius: 50%; 
+	border: none;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	margin: -3px 2px;
+	cursor: pointer;
 }
 
 /* #chatbox {
